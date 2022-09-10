@@ -1,0 +1,110 @@
+[gd_scene load_steps=23 format=2]
+
+[ext_resource path="res://assets/BaseScenes/Linux_Penguin.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Player/PlayerOld.gd" type="Script" id=2]
+[ext_resource path="res://Player/AnimationPlayer.gd" type="Script" id=3]
+[ext_resource path="res://IceProjectile/IceProjectile.tscn" type="PackedScene" id=4]
+
+[sub_resource type="AnimationNodeAnimation" id=1]
+animation = "Idle"
+
+[sub_resource type="AnimationNodeAnimation" id=16]
+animation = "Throw"
+
+[sub_resource type="AnimationNodeTimeScale" id=17]
+
+[sub_resource type="AnimationNodeBlendTree" id=18]
+graph_offset = Vector2( 51.6698, 26.5215 )
+nodes/Animation/node = SubResource( 16 )
+nodes/Animation/position = Vector2( 80, 160 )
+nodes/TimeScale/node = SubResource( 17 )
+nodes/TimeScale/position = Vector2( 280, 160 )
+nodes/output/position = Vector2( 460, 160 )
+node_connections = [ "TimeScale", 0, "Animation", "output", 0, "TimeScale" ]
+
+[sub_resource type="AnimationNodeAnimation" id=13]
+animation = "ThrowHold"
+
+[sub_resource type="AnimationNodeAnimation" id=8]
+animation = "Walk"
+
+[sub_resource type="AnimationNodeTimeScale" id=9]
+
+[sub_resource type="AnimationNodeBlendTree" id=10]
+nodes/Animation/node = SubResource( 8 )
+nodes/Animation/position = Vector2( 100, 100 )
+nodes/TimeScale/node = SubResource( 9 )
+nodes/TimeScale/position = Vector2( 313, 86 )
+nodes/output/position = Vector2( 500, 80 )
+node_connections = [ "TimeScale", 0, "Animation", "output", 0, "TimeScale" ]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=11]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=12]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=14]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=15]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=19]
+switch_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=20]
+switch_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=21]
+switch_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id=5]
+states/Idle/node = SubResource( 1 )
+states/Idle/position = Vector2( 210, 128 )
+states/Throw/node = SubResource( 18 )
+states/Throw/position = Vector2( 640, 108 )
+states/ThrowHold/node = SubResource( 13 )
+states/ThrowHold/position = Vector2( 422, 259 )
+states/Walk/node = SubResource( 10 )
+states/Walk/position = Vector2( 366, 70 )
+transitions = [ "Idle", "Walk", SubResource( 11 ), "Walk", "Idle", SubResource( 12 ), "Idle", "ThrowHold", SubResource( 14 ), "Walk", "ThrowHold", SubResource( 15 ), "ThrowHold", "Throw", SubResource( 19 ), "Throw", "Walk", SubResource( 20 ), "Throw", "Idle", SubResource( 21 ) ]
+start_node = "Idle"
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=6]
+
+[sub_resource type="CapsuleShape" id=7]
+radius = 1.2907
+height = 1.17076
+
+[node name="Player" type="KinematicBody"]
+script = ExtResource( 2 )
+move_speed = 6
+ice_scene = ExtResource( 4 )
+
+[node name="Linux_Penguin" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.130715, 0, 0, 0, 0.130715, 0, 0, 0, 0.130715, 0, 0, 0 )
+
+[node name="Skeleton" parent="Linux_Penguin/Linux Penguin (Armature)" index="0"]
+bones/22/bound_children = [ NodePath("IceAttachment") ]
+
+[node name="IceAttachment" type="BoneAttachment" parent="Linux_Penguin/Linux Penguin (Armature)/Skeleton" index="12"]
+transform = Transform( -0.0763146, 0.0304984, 0.996617, 0.379595, -0.923375, 0.0573241, 0.922, 0.382685, 0.05889, 10.3449, -2.19018, 3.26024 )
+bone_name = "Bone.008"
+
+[node name="Offset" type="Spatial" parent="Linux_Penguin/Linux Penguin (Armature)/Skeleton/IceAttachment"]
+transform = Transform( 1, 5.96046e-08, -1.49012e-08, -7.45058e-09, 1, -5.40167e-08, 1.49012e-08, 5.58794e-09, 1, 3.8743e-07, 8.11323, -4.32161 )
+
+[node name="AnimationPlayer" parent="Linux_Penguin" index="1"]
+script = ExtResource( 3 )
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource( 5 )
+anim_player = NodePath("../Linux_Penguin/AnimationPlayer")
+active = true
+parameters/playback = SubResource( 6 )
+parameters/Throw/TimeScale/scale = 1.46
+parameters/Walk/TimeScale/scale = 1.96
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 1.8964, 0 )
+visible = false
+shape = SubResource( 7 )
+
+[editable path="Linux_Penguin"]

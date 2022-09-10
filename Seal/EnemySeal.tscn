@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/BaseScenes/Seal.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Seal/EnemySeal.gd" type="Script" id=2]
+[ext_resource path="res://Seal/AnimationPlayer.gd" type="Script" id=3]
+
+[sub_resource type="CapsuleShape" id=1]
+radius = 0.887294
+height = 6.57029
+
+[node name="KinematicBody" type="KinematicBody" groups=["seal"]]
+collision_layer = 4
+collision_mask = 15
+script = ExtResource( 2 )
+min_speed = 18
+max_speed = 35
+
+[node name="Seal" parent="." instance=ExtResource( 1 )]
+transform = Transform( 5.52127, 0, 0, 0, 5.52127, 0, 0, 0, 5.52127, 0, 0, 0 )
+
+[node name="AnimationPlayer" parent="Seal" index="1"]
+autoplay = "Slide"
+script = ExtResource( 3 )
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.474859, 0 )
+shape = SubResource( 1 )
+
+[node name="VisibilityNotifier" type="VisibilityNotifier" parent="."]
+
+[connection signal="screen_exited" from="VisibilityNotifier" to="." method="_on_VisibilityNotifier_screen_exited"]
+
+[editable path="Seal"]
